@@ -1161,70 +1161,6 @@
         }
     </style>
 
-<!-- FIX: stile SOLO per i pulsanti di MODIFICA CAMERE -->
-<style id="fix-modifica-camere" type="text/css">
-/* Container della lista camere in MODIFICA CAMERE (tutti i piani) */
-#floor-rooms-grid {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)) !important;
-  gap: 14px !important;
-  margin: 20px 0 !important;
-  padding: 0 !important;
-  background: transparent !important;
-}
-
-/* Card elegante per ciascuna camera - STILE UNIFICATO con room-number-btn */
-#floor-rooms-grid > button.modifica-room-btn {
-  width: 95% !important;
-  background: rgba(255, 255, 255, 0.1) !important;
-  color: white !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  padding: 8px 6px !important;
-  margin: 2px !important;
-  font-size: 1em !important;
-  font-weight: 600 !important;
-  border-radius: 8px !important;
-  cursor: pointer !important;
-  transition: all 0.3s ease !important;
-  backdrop-filter: blur(10px) !important;
-  text-align: center !important;
-  position: relative !important;
-  display: inline-block !important;
-  min-height: auto !important;
-  min-width: auto !important;
-  box-shadow: none !important;
-  text-transform: none !important;
-  white-space: normal !important;
-}
-
-/* Rimuovi la barra decorativa laterale */
-#floor-rooms-grid > button.modifica-room-btn::before {
-  display: none !important;
-}
-
-/* Hover: stesso effetto dei pulsanti normali */
-#floor-rooms-grid > button.modifica-room-btn:hover {
-  background: rgba(255, 255, 255, 0.2) !important;
-  border-color: #4a90e2 !important;
-  transform: translateY(0) !important;
-  box-shadow: none !important;
-}
-
-/* Tipografia interna - allineata ai pulsanti normali */
-#floor-rooms-grid > button.modifica-room-btn .room-number {
-  font-weight: 600 !important;
-  font-size: 1em !important;
-  margin: 0 !important;
-  color: white !important;
-}
-#floor-rooms-grid > button.modifica-room-btn .room-type {
-  font-weight: 400 !important;
-  font-size: 0.85em !important;
-  color: rgba(255, 255, 255, 0.8) !important;
-  margin-top: 5px !important;
-}
-</style>
-
 </head>
 <body>
     <!-- Password Protection Modal -->
@@ -1308,35 +1244,6 @@
 
             <div class="menu-item">
                 <button class="floor-btn" onclick="showDisponibilita(this)">DISPONIBILITÀ</button>
-            </div>
-
-
-            <div class="menu-item">
-                <button class="floor-btn" onclick="toggleSubmenu(&#39;modifica-camere&#39;)">MODIFICA CAMERE</button>
-                <div class="submenu" id="modifica-camere-submenu">
-                    <button class="room-btn" onclick="selectModificaFloor(&#39;piano1&#39;)">PIANO PRIMO</button>
-                    <button class="room-btn" onclick="selectModificaFloor(&#39;piano2&#39;)">PIANO AMMEZZATO</button>
-                    <button class="room-btn" onclick="selectModificaFloor(&#39;piano3&#39;)">PIANO SECONDO</button>
-                </div>
-            </div>
-
-            <div class="menu-item">
-                <button class="floor-btn" onclick="toggleSubmenu(&#39;spogliatoi&#39;)">SPOGLIATOI</button>
-                <div class="submenu" id="spogliatoi-submenu">
-                    <button class="room-btn" onclick="selectSpogliatoiFloor(&#39;piano1&#39;)">PIANO PRIMO</button>
-                    <button class="room-btn" onclick="selectSpogliatoiFloor(&#39;piano3&#39;)">PIANO SECONDO</button>
-                </div>
-            </div>
-
-            <div class="menu-item">
-                <button class="floor-btn" onclick="toggleSubmenu(&#39;locali&#39;)">LOCALI</button>
-                <div class="submenu" id="locali-submenu">
-                    <button class="room-btn" onclick="selectLocaliType(&#39;segreterie&#39;)">SEGRETERIE</button>
-                    <button class="room-btn" onclick="selectLocaliType(&#39;uffici&#39;)">UFFICI</button>
-                    <button class="room-btn" onclick="selectLocaliType(&#39;classificati&#39;)">CLASSIFICATI</button>
-                    <button class="room-btn" onclick="selectLocaliType(&#39;casse-riserva&#39;)">CASSE DI RISERVA</button>
-                    <button class="room-btn" onclick="selectLocaliType(&#39;magazzini&#39;)">MAGAZZINI</button>
-                </div>
             </div>
 
             <div class="menu-item">
@@ -1434,80 +1341,6 @@
                         <div class="riepilogo-panel">
                             <h3 id="occupati-panel-title">🔴 STANZE/LETTI OCCUPATI</h3>
                             <div id="occupati-panel-content"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="room-info" id="modifica-camere-info">
-                    <h2 id="modifica-floor-title">MODIFICA CONFIGURAZIONE CAMERE</h2>
-                    
-                    <div class="modifica-content">
-                        <div class="modifica-instructions" id="modifica-instructions">
-                            <p>Seleziona un piano e poi una camera per modificarne la configurazione dei letti:</p>
-                        </div>
-                        
-                        <div id="floor-rooms-grid">
-                            <!-- Floor rooms will be populated by JavaScript -->
-                        </div>
-                        
-                        <!-- Modal for room modification -->
-                        <div class="modal" id="modificaCameraModal" style="display: none;">
-                            <div class="modal-content">
-                                <span class="close" onclick="closeModificaCameraModal()">×</span>
-                                <h3 id="modifica-room-title">Modifica Camera</h3>
-                                
-                                <div class="modifica-form">
-                                    <div class="bed-count-section">
-                                        <h4>Numero di letti nella camera:</h4>
-                                        <div class="bed-checkboxes">
-                                            <label><input type="radio" name="bed-count" value="1"> 1 letto (Singola)</label>
-                                            <label><input type="radio" name="bed-count" value="2"> 2 letti (Doppia)</label>
-                                            <label><input type="radio" name="bed-count" value="3"> 3 letti (Tripla)</label>
-                                            <label><input type="radio" name="bed-count" value="4"> 4 letti (Quadrupla)</label>
-                                            <label><input type="radio" name="bed-count" value="5"> 5 letti (Quintupla)</label>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="warning-section">
-                                        <p style="color: #f39c12; font-style: italic;">
-                                            ⚠️ Attenzione: Modificare il numero di letti cancellerà tutte le assegnazioni correnti per questa camera.
-                                        </p>
-                                    </div>
-                                    
-                                    <div class="modifica-buttons">
-                                        <button class="save-btn" onclick="saveRoomModification()">Salva Modifiche</button>
-                                        <button class="cancel-btn" onclick="closeModificaCameraModal()">Annulla</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="room-info" id="spogliatoi-info">
-                    <h2 id="spogliatoi-floor-title">GESTIONE SPOGLIATOI</h2>
-                    
-                    <div class="spogliatoi-content">
-                        <div class="spogliatoi-instructions" id="spogliatoi-instructions">
-                            <p>Seleziona un piano per gestire gli spogliatoi:</p>
-                        </div>
-                        
-                        <div class="spogliatoi-grid" id="spogliatoi-grid">
-                            <!-- Spogliatoi content will be populated by JavaScript -->
-                        </div>
-                    </div>
-                </div>
-
-                <div class="room-info" id="locali-info">
-                    <h2 id="locali-type-title">GESTIONE LOCALI</h2>
-                    
-                    <div class="locali-content">
-                        <div class="locali-instructions" id="locali-instructions">
-                            <p>Seleziona un tipo di locale per gestire le assegnazioni:</p>
-                        </div>
-                        
-                        <div class="locali-grid" id="locali-grid">
-                            <!-- Locali content will be populated by JavaScript -->
                         </div>
                     </div>
                 </div>
@@ -2568,9 +2401,6 @@
             document.getElementById('tripla-rooms-view').classList.remove('active');
             document.getElementById('disponibilita-info').classList.remove('active');
             document.getElementById('dati-info').classList.remove('active');
-            document.getElementById('modifica-camere-info').classList.remove('active');
-            document.getElementById('spogliatoi-info').classList.remove('active');
-            document.getElementById('locali-info').classList.remove('active');
             document.getElementById('genera-ricevuta-info').classList.remove('active');
             
             currentRoom = null;
@@ -2604,9 +2434,6 @@
             document.getElementById('tripla-rooms-view').classList.remove('active');
             document.getElementById('disponibilita-info').classList.remove('active');
             document.getElementById('dati-info').classList.remove('active');
-            document.getElementById('modifica-camere-info').classList.remove('active');
-            document.getElementById('spogliatoi-info').classList.remove('active');
-            document.getElementById('locali-info').classList.remove('active');
             document.getElementById('genera-ricevuta-info').classList.remove('active');
             document.getElementById('room-title').textContent = `${floorNames[floor]} - ${roomTypes[roomType]}`;
             document.getElementById('room-description').textContent = roomDescriptions[roomType];
@@ -2628,9 +2455,6 @@
             document.getElementById('riepilogo-info').classList.remove('active');
             document.getElementById('disponibilita-info').classList.remove('active');
             document.getElementById('dati-info').classList.remove('active');
-            document.getElementById('modifica-camere-info').classList.remove('active');
-            document.getElementById('spogliatoi-info').classList.remove('active');
-            document.getElementById('locali-info').classList.remove('active');
             document.getElementById('genera-ricevuta-info').classList.remove('active');
             
             // Generate dynamic room list
@@ -2756,9 +2580,6 @@
             document.getElementById('tripla-rooms-view').classList.remove('active');
             document.getElementById('disponibilita-info').classList.remove('active');
             document.getElementById('dati-info').classList.remove('active');
-            document.getElementById('modifica-camere-info').classList.remove('active');
-            document.getElementById('spogliatoi-info').classList.remove('active');
-            document.getElementById('locali-info').classList.remove('active');
             document.getElementById('genera-ricevuta-info').classList.remove('active');
             document.getElementById('riepilogo-info').classList.add('active');
             
@@ -2799,9 +2620,6 @@
             document.getElementById('tripla-rooms-view').classList.remove('active');
             document.getElementById('riepilogo-info').classList.remove('active');
             document.getElementById('dati-info').classList.remove('active');
-            document.getElementById('modifica-camere-info').classList.remove('active');
-            document.getElementById('spogliatoi-info').classList.remove('active');
-            document.getElementById('locali-info').classList.remove('active');
             document.getElementById('genera-ricevuta-info').classList.remove('active');
             document.getElementById('disponibilita-info').classList.add('active');
             
@@ -3030,9 +2848,6 @@
             document.getElementById('riepilogo-info').classList.remove('active');
             document.getElementById('disponibilita-info').classList.remove('active');
             document.getElementById('dati-info').classList.remove('active');
-            document.getElementById('modifica-camere-info').classList.remove('active');
-            document.getElementById('spogliatoi-info').classList.remove('active');
-            document.getElementById('locali-info').classList.remove('active');
             document.getElementById('genera-ricevuta-info').classList.remove('active');
             document.getElementById('genera-ricevuta-info').classList.add('active');
             
@@ -3068,9 +2883,6 @@
             document.getElementById('tripla-rooms-view').classList.remove('active');
             document.getElementById('disponibilita-info').classList.remove('active');
             document.getElementById('riepilogo-info').classList.remove('active');
-            document.getElementById('modifica-camere-info').classList.remove('active');
-            document.getElementById('spogliatoi-info').classList.remove('active');
-            document.getElementById('locali-info').classList.remove('active');
             document.getElementById('genera-ricevuta-info').classList.remove('active');
             document.getElementById('dati-info').classList.add('active');
             
@@ -5819,375 +5631,6 @@
                 alert('❌ Errore durante la generazione del PDF: ' + error.message);
             }
         }
-
-        let currentModificaRoom = null;
-        let currentModificaFloor = 'piano1';
-        
-        function selectModificaFloor(floor) {
-            if (!requireAuthentication()) return;
-            // Clear all room button selections
-            const allRoomBtns = document.querySelectorAll('.room-btn');
-            allRoomBtns.forEach(btn => btn.classList.remove('selected'));
-            
-            // Select current floor button
-            event.target.classList.add('selected');
-
-            // Show modifica camere section
-            document.getElementById('welcome').style.display = 'none';
-            document.getElementById('room-info').classList.remove('active');
-            document.getElementById('tripla-rooms-view').classList.remove('active');
-            document.getElementById('riepilogo-info').classList.remove('active');
-            document.getElementById('disponibilita-info').classList.remove('active');
-            document.getElementById('dati-info').classList.remove('active');
-            document.getElementById('spogliatoi-info').classList.remove('active');
-            document.getElementById('locali-info').classList.remove('active');
-            document.getElementById('genera-ricevuta-info').classList.remove('active');
-            document.getElementById('modifica-camere-info').classList.add('active');
-
-            // Show the selected floor
-            showModificaFloor(floor);
-        }
-
-        function selectLocaliType(tipo) {
-            // Clear all room button selections
-            const allRoomBtns = document.querySelectorAll('.room-btn');
-            allRoomBtns.forEach(btn => btn.classList.remove('selected'));
-            
-            // Select current type button
-            event.target.classList.add('selected');
-
-            // Show locali section
-            document.getElementById('welcome').style.display = 'none';
-            document.getElementById('room-info').classList.remove('active');
-            document.getElementById('tripla-rooms-view').classList.remove('active');
-            document.getElementById('riepilogo-info').classList.remove('active');
-            document.getElementById('disponibilita-info').classList.remove('active');
-            document.getElementById('dati-info').classList.remove('active');
-            document.getElementById('modifica-camere-info').classList.remove('active');
-            document.getElementById('spogliatoi-info').classList.remove('active');
-            document.getElementById('locali-info').classList.remove('active');
-            document.getElementById('genera-ricevuta-info').classList.remove('active');
-            document.getElementById('locali-info').classList.add('active');
-
-            // Show the selected type
-            showLocaliType(tipo);
-        }
-
-        function showLocaliType(tipo) {
-            // Update title based on selected type
-            const tipoNames = {
-                'segreterie': 'SEGRETERIE',
-                'uffici': 'UFFICI',
-                'classificati': 'CLASSIFICATI',
-                'casse-riserva': 'CASSE DI RISERVA',
-                'magazzini': 'MAGAZZINI'
-            };
-            document.getElementById('locali-type-title').textContent = `GESTIONE LOCALI - ${tipoNames[tipo]}`;
-            
-            // Define locali for each type
-            const locali = {
-                'segreterie': ['L 1-07', 'L 1-08', 'L 1-09', 'L 1-33'],
-                'uffici': ['L A-61', 'L 1-34', 'L 1-37', 'L 1-90', 'L 1-91', 'L 1-92', 'L 1-93', 'L 1-94', 'L 1-95', 'L 1-96', 'L 1-97', 'L 1-98', 'L 1-99', 'L 1-100', 'L A-101'],
-                'classificati': ['L A106-1', 'L A106-2', 'L A106-3', 'L A106-4'],
-                'casse-riserva': ['L A108-1', 'L A108-2', 'L A108-3'],
-                'magazzini': ['L 1-80', 'L 1-86', 'L 1-87', 'L 2-32', 'L 2-34', 'L 2-41', 'L 2-82', 'L 2-83']
-            };
-            
-            // Update instructions
-            const instructions = document.getElementById('locali-instructions');
-            instructions.innerHTML = `<p>Seleziona un locale di tipo <strong>${tipoNames[tipo]}</strong> per gestire l'assegnazione:</p>`;
-            
-            // Generate locali grid
-            const localiGrid = document.getElementById('locali-grid');
-            let localiHtml = '';
-            
-            if (locali[tipo]) {
-                locali[tipo].forEach(locale => {
-                    localiHtml += `
-                        <button class="room-number-btn" onclick="openLocaleModal('${locale}')" style="width: 200px; margin: 10px;">
-                            ${locale}
-                            <div class="status-indicator" id="status-${locale.replace(/\s/g, '-').replace(/\//g, '-')}"></div>
-                        </button>
-                    `;
-                });
-                
-                localiGrid.innerHTML = `
-                    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 20px;">
-                        ${localiHtml}
-                    </div>
-                `;
-                
-                // Initialize status indicators for the displayed locali
-                setTimeout(() => {
-                    locali[tipo].forEach(locale => {
-                        updateLocaleStatus(locale);
-                    });
-                }, 100);
-            } else {
-                localiGrid.innerHTML = `
-                    <div style="text-align: center; padding: 50px; color: rgba(255,255,255,0.6); font-style: italic;">
-                        <h3>📦 Nessun locale disponibile</h3>
-                        <p>Non ci sono locali configurati per questo tipo.</p>
-                    </div>
-                `;
-            }
-        }
-
-        function selectSpogliatoiFloor(floor) {
-            // Clear all room button selections
-            const allRoomBtns = document.querySelectorAll('.room-btn');
-            allRoomBtns.forEach(btn => btn.classList.remove('selected'));
-            
-            // Select current floor button
-            event.target.classList.add('selected');
-
-            // Show spogliatoi section
-            document.getElementById('welcome').style.display = 'none';
-            document.getElementById('room-info').classList.remove('active');
-            document.getElementById('tripla-rooms-view').classList.remove('active');
-            document.getElementById('riepilogo-info').classList.remove('active');
-            document.getElementById('disponibilita-info').classList.remove('active');
-            document.getElementById('dati-info').classList.remove('active');
-            document.getElementById('modifica-camere-info').classList.remove('active');
-            document.getElementById('spogliatoi-info').classList.remove('active');
-            document.getElementById('genera-ricevuta-info').classList.remove('active');
-            document.getElementById('spogliatoi-info').classList.add('active');
-
-            // Show the selected floor
-            showSpogliatoiFloor(floor);
-        }
-
-        function showSpogliatoiFloor(floor) {
-            // Update title based on selected floor
-            const floorNames = {
-                'piano1': 'PIANO PRIMO',
-                'piano2': 'PIANO AMMEZZATO', 
-                'piano3': 'PIANO SECONDO'
-            };
-            document.getElementById('spogliatoi-floor-title').textContent = `GESTIONE SPOGLIATOI - ${floorNames[floor]}`;
-            
-            // Define lockers for each floor
-            const spogliatoi = {
-                'piano1': ['S 1-56', 'S 1-63', 'S 1-65', 'S 1-69'],
-                'piano3': ['S 2-02', 'S 2-37', 'S 2-84', 'S 2-85', 'S 2-87']
-            };
-            
-            // Update instructions
-            const instructions = document.getElementById('spogliatoi-instructions');
-            instructions.innerHTML = `<p>Seleziona uno spogliatoio del <strong>${floorNames[floor]}</strong> per gestire l'assegnazione:</p>`;
-            
-            // Generate spogliatoi grid
-            const spogliatoiGrid = document.getElementById('spogliatoi-grid');
-            let spogliatoiHtml = '';
-            
-            if (spogliatoi[floor]) {
-                spogliatoi[floor].forEach(spogliatoio => {
-                    spogliatoiHtml += `
-                        <button class="room-number-btn" onclick="openSpogliatoioModal('${spogliatoio}')" style="width: 200px; margin: 10px;">
-                            ${spogliatoio}
-                            <div class="status-indicator" id="status-${spogliatoio.replace(/\s/g, '-')}"></div>
-                        </button>
-                    `;
-                });
-                
-                spogliatoiGrid.innerHTML = `
-                    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 20px;">
-                        ${spogliatoiHtml}
-                    </div>
-                `;
-                
-                // Initialize status indicators for the displayed spogliatoi
-                setTimeout(() => {
-                    spogliatoi[floor].forEach(spogliatoio => {
-                        updateSpogliatoioStatus(spogliatoio);
-                    });
-                }, 100);
-            } else {
-                spogliatoiGrid.innerHTML = `
-                    <div style="text-align: center; padding: 50px; color: rgba(255,255,255,0.6); font-style: italic;">
-                        <h3>📦 Nessuno spogliatoio disponibile</h3>
-                        <p>Non ci sono spogliatoi configurati per questo piano.</p>
-                    </div>
-                `;
-            }
-        }
-
-        
-        function showModificaFloor(floor) {
-            currentModificaFloor = floor;
-            
-            // Update title based on selected floor
-            const floorNames = {
-                'piano1': 'PIANO PRIMO',
-                'piano2': 'PIANO AMMEZZATO', 
-                'piano3': 'PIANO SECONDO'
-            };
-            document.getElementById('modifica-floor-title').textContent = `MODIFICA CONFIGURAZIONE CAMERE - ${floorNames[floor]}`;
-            
-            // Generate rooms for the selected floor
-            generateFloorRoomsList(floor);
-        }
-        
-        function generateFloorRoomsList(floor) {
-            const roomsGrid = document.getElementById('floor-rooms-grid');
-            const instructions = document.getElementById('modifica-instructions');
-            
-            const floorNames = {
-                'piano1': 'Piano Primo',
-                'piano2': 'Piano Ammezzato',
-                'piano3': 'Piano Secondo'
-            };
-            
-            const floorName = floorNames[floor];
-            
-            // Filter rooms by floor prefix
-            let floorRooms = [];
-            if (floor === 'piano1') {
-                floorRooms = Object.keys(roomData).filter(room => 
-                    room.startsWith('1-') || /^10[1-5]$/.test(room)
-                );
-            } else if (floor === 'piano2') {
-                floorRooms = Object.keys(roomData).filter(room => room.startsWith('A-'));
-            } else if (floor === 'piano3') {
-                floorRooms = Object.keys(roomData).filter(room => room.startsWith('2-'));
-            }
-            
-            // Sort rooms in ascending order (natural sort for mixed numbers)
-            floorRooms.sort((a, b) => {
-                // Extract numeric parts for proper sorting
-                const aNum = a.match(/\d+/g)?.map(Number) || [0];
-                const bNum = b.match(/\d+/g)?.map(Number) || [0];
-                
-                // Compare first number
-                if (aNum[0] !== bNum[0]) return aNum[0] - bNum[0];
-                
-                // If same first number, compare second number if exists
-                return (aNum[1] || 0) - (bNum[1] || 0);
-            });
-            
-            // Generate room buttons HTML
-            let roomsHtml = '';
-            if (floorRooms.length === 0) {
-                roomsHtml = `<p style="color: rgba(255,255,255,0.6); font-style: italic; text-align: center; margin-top: 50px;">
-                    Nessuna camera configurata per il ${floorName}
-                </p>`;
-            } else {
-                floorRooms.forEach(roomNumber => {
-                    const bedCount = roomData[roomNumber].beds.length;
-                    const roomType = getRoomTypeName(bedCount);
-                    
-                    roomsHtml += `
-                        <button class="modifica-room-btn" onclick="openModificaCameraModal('${roomNumber}')">
-                            <span class="room-number">${roomNumber}</span>
-                            <span class="room-type">${roomType} (${bedCount} ${bedCount === 1 ? 'letto' : 'letti'})</span>
-                        </button>
-                    `;
-                });
-            }
-            
-            instructions.innerHTML = `<p>Seleziona una camera dal <strong>${floorName}</strong> per modificarne la configurazione dei letti:</p>`;
-            roomsGrid.innerHTML = roomsHtml;
-        }
-        
-        function getRoomTypeName(bedCount) {
-            switch(bedCount) {
-                case 1: return 'Singola';
-                case 2: return 'Doppia';
-                case 3: return 'Tripla';
-                case 4: return 'Quadrupla';
-                case 5: return 'Quintupla';
-                default: return 'Sconosciuta';
-            }
-        }
-        
-        function openModificaCameraModal(roomNumber) {
-            if (!requireAuthentication()) return;
-            currentModificaRoom = roomNumber;
-            const modal = document.getElementById('modificaCameraModal');
-            const title = document.getElementById('modifica-room-title');
-            const data = roomData[roomNumber];
-            
-            title.textContent = `Modifica Camera ${roomNumber}`;
-            
-            // Set current bed count
-            const currentBedCount = data.beds.length;
-            const radioButtons = document.querySelectorAll('input[name="bed-count"]');
-            radioButtons.forEach(radio => {
-                radio.checked = radio.value == currentBedCount;
-            });
-            
-            modal.style.display = 'block';
-        }
-        
-        function closeModificaCameraModal() {
-            document.getElementById('modificaCameraModal').style.display = 'none';
-            currentModificaRoom = null;
-        }
-        
-        function saveRoomModification() {
-            if (!currentModificaRoom) return;
-            if (!requireAuthentication()) return;
-            
-            const selectedBedCount = document.querySelector('input[name="bed-count"]:checked');
-            if (!selectedBedCount) {
-                alert('Seleziona il numero di letti per la camera.');
-                return;
-            }
-            
-            const newBedCount = parseInt(selectedBedCount.value);
-            const currentData = roomData[currentModificaRoom];
-            const oldBedCount = currentData.beds.length;
-            
-            if (newBedCount === oldBedCount) {
-                alert('Il numero di letti non è cambiato.');
-                closeModificaCameraModal();
-                return;
-            }
-            
-            const oldTypeName = getRoomTypeName(oldBedCount);
-            const newTypeName = getRoomTypeName(newBedCount);
-            
-            // Confirm the change
-            if (!confirm(`Sei sicuro di voler modificare la Camera ${currentModificaRoom}?\n\nCambiamento: ${oldTypeName} (${oldBedCount} letti) → ${newTypeName} (${newBedCount} letti)\n\n⚠️ Questo cancellerà tutte le assegnazioni correnti per questa camera.`)) {
-                return;
-            }
-            
-            // Update room data
-            const newBeds = new Array(newBedCount).fill('');
-            roomData[currentModificaRoom] = {
-                beds: newBeds,
-                unavailable: false,
-                underWork: false,
-                notes: currentData.notes || ''
-            };
-            
-            // Save to localStorage
-            saveRoomData();
-            
-            // Refresh the current floor rooms list
-            generateFloorRoomsList(currentModificaFloor);
-            
-            // Close modal
-            closeModificaCameraModal();
-            
-            // Show success message with updated info
-            alert(`✅ Camera ${currentModificaRoom} modificata con successo!\n\nNuova configurazione: ${newTypeName} con ${newBedCount} ${newBedCount === 1 ? 'letto' : 'letti'}\n\n🔄 La camera è stata automaticamente ricollocata nella categoria corretta.`);
-            
-            // Update all other sections that might show this room
-            if (typeof generateDisponibilitaData === 'function') {
-                generateDisponibilitaData();
-            }
-            
-            // If user is currently viewing a room type view, refresh it
-            const triplaRoomsView = document.getElementById('tripla-rooms-view');
-            if (triplaRoomsView && triplaRoomsView.classList.contains('active')) {
-                // Refresh the current view with the same floor and room type
-                if (currentFloor && currentRoom) {
-                    generateDynamicRoomView(currentFloor, currentRoom);
-                }
-            }
-        }
-
 
         // Initialize the page when loaded
         document.addEventListener('DOMContentLoaded', function() {
